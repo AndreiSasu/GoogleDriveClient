@@ -1,0 +1,22 @@
+--start: 
+            Should NOT be used on very busy filesystems!
+            Specify a list of absolute paths, like this:
+            python main.py --start /var /home /root
+
+--stop:
+	Attempts a graceful shutdown of the SyncThemAll daemon process.
+
+--initialize: 
+            Should be run only once, when setting the application up.
+            If successful, it will create a file called "credstore.json" in the folder where the main.py program resides.
+            python main.py --initialize 1077359083816-49381jdfmbfqj4m1sb2ub8tmdt7ddu6n.apps.googleusercontent.com H4GgY3jXg1GhQ3BQ1WMBJU8-
+
+--download: 
+            Downloads the contents of a Google Drive folder to the local filesystem
+            Should be called like this: 
+            python main.py --download <local folder name (abspath)> <gdrive folder name>
+            python main.py --download /tmp/temp SyncThemAll
+
+--upload: 
+        Uploads the contents of a local folder to Google Drive:
+        python main.py --upload /var/temp SyncThemAll
