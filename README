@@ -1,3 +1,9 @@
+		SyncThemAll
+		-----------
+		A  Linux command line Google Drive Client 
+		Written in Python, released under GPL
+		Uses pyinotify to get events from the filesystem: https://github.com/seb-m/pyinotify
+```
 --start: 
             Should NOT be used on very busy filesystems!
             Specify a list of absolute paths, like this:
@@ -20,3 +26,71 @@
 --upload: 
         Uploads the contents of a local folder to Google Drive:
         python main.py --upload /var/temp SyncThemAll
+```
+
+
+
+Configuration steps:
+-----------------------
+
+1.) Install the prerequisites, here is an example via pip: 
+```
+pip install pyinotify 
+pip install google-api-python-client
+
+```
+2.) Configure the authorization process:
+Go to: https://code.google.com/apis/console/ + make sure under "Services", Drive API and Drive SDK are enabled.
+
+Under API Access:
+
+-> create a new Client ID, with: **Application Type**: *Installed application*, **Installed application type**: *other*
+
+Select the Client ID and Client Secret generated, for example:
+
+
+```
+Client ID: 1077359083816-koufetqto29kjres3icm9ghjdt7o49kg.apps.googleusercontent.com
+Client secret:	5YuYZQfgCDITUu7BmocdxcH8
+Redirect URIs:	urn:ietf:wg:oauth:2.0:oob
+http://localhost
+```
+
+Run the initialization with the above parameters:
+```
+python main.py --initialize 1077359083816-koufetqto29kjres3icm9ghjdt7o49kg.apps.googleusercontent.com 5YuYZQfgCDITUu7BmocdxcH8
+```
+A message similar to the following will be shown:
+```
+Go to the following link in your browser: https://accounts.google.com/o/oauth2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&client_id=1077359083816-koufetqto29kjres3icm9ghjdt7o49kg.apps.googleusercontent.com&access_type=offline
+Enter verification code:
+```
+
+After the authorization code has been stored, the file Config/credstore.json will be used for further authentication.
+
+
+2.) Enable realtime synchronization on a folder: 
+```
+python main.py --start /home/andrei/GoogleDrive
+```
+
+The above process will detach and daemonize itself. It can be stopped using: 
+```
+python main.py --stop
+```
+
+Known issues / TODO LIST:
+-------------------------
+
+-> moving files / folders is not supported yet
+
+-> file / folder exclusions are not supported yet
+
+-> the process is not optimised for quickly creating / removing folder/file structures and you will experience huge delays on very busy filesystems ( lots of create and delete operations )
+
+-> no support for symlinks yet
+
+-> no support for empty files yet
+
+
+**Report bugs and feature requests to: andrei.sasu42@gmail.com**
