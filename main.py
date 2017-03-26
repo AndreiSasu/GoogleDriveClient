@@ -84,6 +84,9 @@ options_dict['treefile'] = treefile
 options_dict['LOGFILE'] = logfile
 options_dict['FILE_SYNC_INTERVAL'] = 5 # seconds
 
+file_list = [];
+folder_list = [];
+
 # make a global debug logging object
 x = logging.getLogger("mainlog")
 x.setLevel(logging.DEBUG)
@@ -109,6 +112,7 @@ class Main():
             options_dict['download'] = dict['download']
             sp = GoogleServiceProvider(**options_dict)
             ds = sp.build_service(sp.get_stored_credentials('testid'))
+            ds = ds[1]
             parent_id = sp.query_entity(ds, "title = '"+options_dict['download'][1]+"'")[0] #[1] = gdrive source folder
             target_dir = options_dict['download'][0]
             print("Found: %s" % parent_id)
@@ -134,7 +138,7 @@ class Main():
                     return 0
 
             download_list = sp.query_entity(ds, "'"+parent_id['id']+"'"+" in parents")
-            file_list = []; folder_list = [];
+
             create_list(download_list)
             print("Found: %s files." % len(file_list))
             print("Found: %s folders." % len(folder_list))
@@ -150,6 +154,7 @@ class Main():
         if args.upload is not None:
             sp = GoogleServiceProvider(**options_dict)
             ds = sp.build_service(sp.get_stored_credentials('testid'))
+            ds = ds[1]
             def evproc(filename,parent, parent_id=None):
                 # obtain full path
                 fullpath = os.path.join(filename, parent)
